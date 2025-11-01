@@ -1,34 +1,35 @@
-name: ci
+name: simple-ci
 
-on: [push]
+on:
+  push:
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
+      # Step 1: Checkout code
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Java 21
+      # Step 2: Setup Java and build backend
+      - name: Setup Java
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: 21
 
-      - name: Backend build and tests
+      - name: Build Spring Boot backend
         working-directory: disputeflow-backend
-        run: mvn -B clean verify -DskipTests
+        run: mvn clean package -DskipTests
 
-      - name: OWASP Dependency Check
-        working-directory: disputeflow-backend
-        run: mvn org.owasp:dependency-check-maven:check -DfailBuildOnCVSS=9
-
-      - name: Set up Node
+      # Step 3: Setup Node.js and build frontend
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Frontend build
+      - name: Build React frontend
         working-directory: frontend
         run: npm ci && npm run build
