@@ -18,7 +18,7 @@ jobs:
 
       - name: Backend build and tests
         working-directory: disputeflow-backend
-        run: mvn -B -DskipITs clean verify
+        run: mvn -B clean verify -DskipTests
 
       - name: OWASP Dependency Check
         working-directory: disputeflow-backend
